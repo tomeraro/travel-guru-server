@@ -5,7 +5,7 @@ var mongoose = require('mongoose');
 //routes
 require('./routes.js')(app); // load my routes
 
-app.listen(8080, function() {
+app.listen(process.env.PORT  || 8080, function() {
     console.log("Server is on");
 });
 
