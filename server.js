@@ -11,6 +11,7 @@ app.listen(8080, function() {
 
 // ************* DB **************//
 var localDB = "mongodb://localhost/CompieInterview";
+var productionDB = "";
 
 //connect to DB
 //mongoose.Promise = global.Promise;
