@@ -15,7 +15,6 @@ module.exports = function(app)
     //********** continent routes ***********//
     app.get('/api/db/getAllContinents', function(req, res) {
         Continent.find({}, function(err, allContinents) {
-            debugger;
             res.send(allContinents);
         });
     });
