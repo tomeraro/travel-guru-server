@@ -1,7 +1,3 @@
-/**
- * Created by tomeraronovsky on 8/26/17.
- */
-
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
@@ -10,4 +6,4 @@ var CountrySchema = new Schema({
     continentId: String
 });
 
-module.exports = mongoose.model('countries', CountrySchema);
+module.exports.countryModel = mongoose.model('Country', CountrySchema);

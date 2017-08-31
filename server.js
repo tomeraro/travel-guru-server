@@ -34,7 +34,6 @@ var app_db = "mongodb://tomeraro:Tomer123@ds111754.mlab.com:11754/travel-guru-db
 
 //connect to DB
 mongoose.Promise = global.Promise;
-
 mongoose.connect(app_db, function(err) {
     if(err!=null)
         console.log('connection error' + err);
