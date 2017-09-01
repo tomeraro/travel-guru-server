@@ -1,10 +1,11 @@
 var mongoose = require('mongoose');
-
+var ContinentSchema = require('./db/ContinentSchema');
+var CountrySchema = require('./db/CountrySchema');
 
 module.exports = function(app)
 {
-    var Continent = mongoose.model('Continent', module.exports.continentModel);
-    var Country = mongoose.model('Country', module.exports.countryModel);
+    let Continent = module.exports.continentModel;
+    let Country = module.exports.countryModel;
 
     //************** routes ************//
     app.get('', function(req, res) {
@@ -18,7 +19,6 @@ module.exports = function(app)
             res.send(allContinents);
         });
     });
-
 
 
     //********** country routes ***********//
