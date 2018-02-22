@@ -5,4 +5,4 @@ var ContinentSchema = new Schema({
     name: String
 });
 
-module.exports.continentModel = mongoose.model('Continents', ContinentSchema);
+module.exports.continentModel = mongoose.model('continents', ContinentSchema);

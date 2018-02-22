@@ -6,4 +6,4 @@ var CountrySchema = new Schema({
     continentId: String
 });
 
-module.exports.countryModel = mongoose.model('Countries', CountrySchema);
+module.exports.countryModel = mongoose.model('Country', CountrySchema);

@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var mongoose = require('mongoose');
 
-app.listen(process.env.PORT  || 8080, function() {
+app.listen(process.env.PORT  || 8080, () => {
     console.log("Server is on");
 });
 
@@ -10,7 +10,7 @@ app.listen(process.env.PORT  || 8080, function() {
 app.use(function (req, res, next) {
 
     // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
 
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
