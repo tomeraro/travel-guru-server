@@ -9,7 +9,7 @@ app.listen(process.env.PORT  || 8080, () => {
 // Add headers
 app.use(function (req, res, next) {
     let localUrl = 'http://localhost:4200';
-    let productionUrl = 'https://packthat-web.herokuapp.com/';
+    let productionUrl = 'http://packthat-web.herokuapp.com';
     let currentUrl = productionUrl;
 
     // Website you wish to allow to connect
