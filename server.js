@@ -1,6 +1,9 @@
 var express = require('express');
 var app = express();
 var mongoose = require('mongoose');
+var bodyParser = require('body-parser');
+app.use(bodyParser.json()); // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 app.listen(process.env.PORT  || 8080, () => {
     console.log("Server is on");
@@ -10,7 +13,7 @@ app.listen(process.env.PORT  || 8080, () => {
 app.use(function (req, res, next) {
     let localUrl = 'http://localhost:4200';
     let productionUrl = 'http://packthat-web.herokuapp.com';
-    let currentUrl = productionUrl;
+    let currentUrl = localUrl;
 
     // Website you wish to allow to connect
     res.setHeader('Access-Control-Allow-Origin', currentUrl);
