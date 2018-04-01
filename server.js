@@ -13,7 +13,7 @@ app.listen(process.env.PORT  || 8080, () => {
 app.use(function (req, res, next) {
     let localUrl = 'http://localhost:4200';
     let productionUrl = 'http://packthat-web.herokuapp.com';
-    let currentUrl = localUrl;
+    let currentUrl = productionUrl;
 
     // Website you wish to allow to connect
     res.setHeader('Access-Control-Allow-Origin', currentUrl);
