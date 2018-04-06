@@ -3,8 +3,8 @@ var EquipmentSchema = require('./../models/EquipmentSchema');
 let Equipment = EquipmentSchema.equipmentModel;
 var concat = require('lodash/concat');
 var flatten = require('lodash/flatten');
-var uniqBy = require('lodash/uniqBy');
-
+var uniqWith = require('lodash/uniqWith');
+var isEqual = require('lodash/isEqual');
 
 exports.getEquipmentBySearchDetails = function(data) {
   let generalEquipments = exports.getGeneralEquipment(data);
@@ -49,7 +49,7 @@ exports.getGeneralEquipment = function(data) {
     let generalEquipmentByTravelType = data[1];
     let generalEquipmentByCountry = data[2];
     let allFinalEquipment = concat(generalEquipmentForAll, generalEquipmentByTravelType, generalEquipmentByCountry);
-    return new Promise((resolve, reject) => resolve(uniqBy(allFinalEquipment, '_id')));
+    return new Promise((resolve, reject) => resolve(uniqWith(allFinalEquipment, isEqual)));
   }); 
 }
 
@@ -79,7 +79,7 @@ exports.getElectricEquipment = function(data) {
     let electricEquipmentsForAll = data[0];
     let electricEquipmentsByTravelType = data[1];
     let allFinalEquipment = concat(electricEquipmentsForAll, electricEquipmentsByTravelType);
-    return new Promise((resolve, reject) => resolve(uniqBy(allFinalEquipment, '_id')));
+    return new Promise((resolve, reject) => resolve(uniqWith(allFinalEquipment, isEqual)));
   }); 
 } 
 
@@ -97,7 +97,7 @@ exports.getTualeticEquipment = function(data) {
   let tualeticEquipmentsForAllPromise = exports.getAllTualeticEquipment();
   return Promise.all([tualeticEquipmentsForAllPromise]).then(data => {
     let tualeticEquipmentsForAll = data[0];
-    return new Promise((resolve, reject) => resolve(uniqBy(tualeticEquipmentsForAll, '_id')));
+    return new Promise((resolve, reject) => resolve(uniqWith(tualeticEquipmentsForAll, isEqual)));
   }); 
 } 
 
@@ -122,7 +122,7 @@ exports.getClothingEquipment = function(data) {
       let clothingEquipmentsByTravelType = data[1];
       let clothingEquipmentsBySeason = data[2];
       let allFinalEquipment = concat(clothingEquipmentsForAll, clothingEquipmentsByTravelType, clothingEquipmentsBySeason);
-      return new Promise((resolve, reject) => resolve(uniqBy(allFinalEquipment, '_id')));
+      return new Promise((resolve, reject) => resolve(uniqWith(allFinalEquipment, isEqual)));
   });
 }; 
 
@@ -147,7 +147,7 @@ exports.getLeisureAndOtherEquipment = function(data) {
       let leisureAndOtherEquipmentsByTravelType = data[1];
       let leisureAndOtherEquipmentsBySeason = data[2];
       let allFinalEquipment = concat(leisureAndOtherEquipmentsForAll, leisureAndOtherEquipmentsByTravelType, leisureAndOtherEquipmentsBySeason);
-      return new Promise((resolve, reject) => resolve(uniqBy(allFinalEquipment, '_id')));
+      return new Promise((resolve, reject) => resolve(uniqWith(allFinalEquipment, isEqual)));
   });
 };
 
@@ -164,10 +164,16 @@ exports.getAllMedicalEquipment = function() {
 exports.getMedicalEquipment = function(data) {
   let medicalEquipmentCategoryId = '5a85c709c9c0a16488556657';
   let medicalEquipmentsForAllPromise = exports.getAllMedicalEquipment();
-  return Promise.all([medicalEquipmentsForAllPromise])
+  let medicalEquipmentsByTravelTypePromise = exports.getEquipmentByEquipmentCategoryAndTravelType(medicalEquipmentCategoryId, data.travelTypeId);
+  return Promise.all([medicalEquipmentsForAllPromise, medicalEquipmentsByTravelTypePromise])
     .then(data => {
       let medicalEquipmentsForAll = data[0];
-      let allFinalEquipment = concat(medicalEquipmentsForAll, []);
-      return new Promise((resolve, reject) => resolve(uniqBy(allFinalEquipment, '_id')));
+      let medicalEquipmentsByTravelType = data[1];
+      let allFinalEquipment = concat(medicalEquipmentsForAll, medicalEquipmentsByTravelType);
+      return new Promise((resolve, reject) => resolve(uniqWith(allFinalEquipment, isEqual)));
   });
 };
+
+
+// ******* PARTICIPANTS EQUIPMENT ********* //
+// BABIES 
