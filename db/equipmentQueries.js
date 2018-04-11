@@ -5,6 +5,7 @@ var concat = require('lodash/concat');
 var flatten = require('lodash/flatten');
 var uniqWith = require('lodash/uniqWith');
 var isEqual = require('lodash/isEqual');
+var includes = require('lodash/includes');
 
 exports.getEquipmentBySearchDetails = function(data) {
   let generalEquipments = exports.getGeneralEquipment(data);
@@ -12,8 +13,20 @@ exports.getEquipmentBySearchDetails = function(data) {
   let tualeticEquipment = exports.getTualeticEquipment(data);
   let clothingEquipment = exports.getClothingEquipment(data);
   let leisureAndOtherEquipment = exports.getLeisureAndOtherEquipment(data);
-  let medicalEquipment = exports.getAllMedicalEquipment(data);
-  return Promise.all([generalEquipments, electricEquipment, tualeticEquipment, clothingEquipment, leisureAndOtherEquipment, medicalEquipment])
+  let medicalEquipment = exports.getMedicalEquipment(data);
+  let specialEquipment = [];
+  //babies special
+  if(includes(data.participants, '5a7a9df8f36d283d3de74006', 0)) {
+    let babiesSpecialEquipment = exports.getBabiesSpecialEquipment(data);
+    specialEquipment.push(babiesSpecialEquipment);
+  }
+  //children & tenagers special
+
+  return Promise.all(concat([
+    generalEquipments, electricEquipment, 
+    tualeticEquipment, clothingEquipment, 
+    leisureAndOtherEquipment, medicalEquipment], 
+    specialEquipment))
     .then(data => flatten(data));
 }
 
@@ -177,3 +190,25 @@ exports.getMedicalEquipment = function(data) {
 
 // ******* PARTICIPANTS EQUIPMENT ********* //
 // BABIES 
+exports.getAllBabiesSpecialEquipment = function() {
+  let babiesSpecialEquipmentCategoryId = '5a85c743c9c0a16488556659';
+  return new Promise(function(resolve, reject) {
+    Equipment.find({ equipmentCategoryId: babiesSpecialEquipmentCategoryId, isForAll: true })
+    .exec((err, babiesSpecialEquipment) => resolve(babiesSpecialEquipment));
+  });
+};
+
+exports.getBabiesSpecialEquipment = function(data) {
+  let babiesSpecialEquipmentCategoryId = '5a85c743c9c0a16488556659';
+  let babiesSpecialEquipmentsForAllPromise = exports.getAllBabiesSpecialEquipment();
+  let babiesSpecialEquipmentsByTravelTypePromise = exports.getEquipmentByEquipmentCategoryAndTravelType(babiesSpecialEquipmentCategoryId, data.travelTypeId);
+  let babiesSpecialEquipmentsBySeasonPromise = exports.getEquipmentByEquipmentCategoryAndSeason(babiesSpecialEquipmentCategoryId, data.seasonId);
+  return Promise.all([babiesSpecialEquipmentsForAllPromise, babiesSpecialEquipmentsByTravelTypePromise, babiesSpecialEquipmentsBySeasonPromise])
+    .then(data => {
+      let babiesSpecialEquipmentsForAll = data[0];
+      let babiesSpecialEquipmentsByTravelType = data[1];
+      let babiesSpecialEquipmentsBySeason = data[2];
+      let allFinalEquipment = concat(babiesSpecialEquipmentsForAll, babiesSpecialEquipmentsByTravelType, babiesSpecialEquipmentsBySeason);
+      return new Promise((resolve, reject) => resolve(uniqWith(allFinalEquipment, isEqual)));
+  });
+};
