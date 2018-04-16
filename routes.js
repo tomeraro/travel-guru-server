@@ -26,6 +26,7 @@ var counyryQueries = require('./db/countryQueries');
 var seasonQueries = require('./db/seasonQueries');
 var travelTypeQueries = require('./db/travelTypeQueries');
 var equipmentListQueries = require('./db/equipmentListQueries');
+var participantsQueries = require('./db/participantQueries');
 
 module.exports = function(app)
 {
@@ -42,32 +43,39 @@ module.exports = function(app)
         res.sendfile('index.html'); // load the single view file
     });
 
+
+    //********** search routes  ************//
+    app.get('/api/db/getAllDataForSearch', function(req, res) {
+        let allcountries = counyryQueries.getAllCountries();
+        let allSeasons = seasonQueries.getAllSeasons();
+        let allTravelTypes = travelTypeQueries.getAllTravelTypes();
+        let allParticipants = participantsQueries.getAllParticipants();
+        Promise.all([allcountries, allSeasons, allTravelTypes, allParticipants]).then(values => {
+            let searchData = [
+                values[0], values[1], values[2], values[3]
+            ];            
+            res.send(searchData);
+        });
+    });
+
     //********** country routes ***********//
     app.get('/api/db/getAllCountries', function(req, res) {
-        Country.find({}, function(err, allCountries) {
-            res.send(allCountries);
-        });
+        counyryQueries.getAllCountries().then(allCountries => res.send(allCountries));
     });
 
     //********** seasons routes ***********//
     app.get('/api/db/getAllSeasons', function(req, res) {
-        Season.find({}, function(err, allSeasons) {
-            res.send(allSeasons);
-        });
+        seasonQueries.getAllSeasons().then(allSeasons => res.send(allSeasons));
     });
 
     //********** TravelTypes routes ***********//
     app.get('/api/db/getAllTravelTypes', function(req, res) {
-        TravelTypes.find({}, function(err, allTravelTypes) {
-            res.send(allTravelTypes);
-        });
+        travelTypeQueries.getAllTravelTypes().then(allTravelTypes => res.send(allTravelTypes));
     });
 
     //********** participants routes ***********//
     app.get('/api/db/getAllParticipants', function(req, res) {
-        Participants.find({}, function(err, allParticipants) {
-            res.send(allParticipants);
-        });
+        participantsQueries.getAllParticipants().then(allParticipants => res.send(allParticipants));
     });
 
     //********** Equipment routes ***********//
